@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      PINENTRY_VERSION: 1.2.1
+      PINENTRY_VERSION: 1.3.0
       MSYSTEM: MINGW64
 
     steps:
@@ -37,13 +37,14 @@ jobs:
 
           cp /mingw64/bin/libassuan-0.dll w32
           cp /mingw64/bin/libgpg-error-0.dll w32
+          cp COPYING w32
         shell: 'C:/shells/msys2bash.cmd {0}'
 
       - name: Archive
         id: archive
         run: |
           cd "pinentry-${{ env.PINENTRY_VERSION }}/w32"
-          Compress-Archive -Path pinentry-w32.exe,libassuan-0.dll,libgpg-error-0.dll -DestinationPath ../../pinentry-w32-ncg-v${{ env.PINENTRY_VERSION }}.zip
+          Compress-Archive -Path pinentry-w32.exe,libassuan-0.dll,libgpg-error-0.dll,COPYING -DestinationPath ../../pinentry-w32-ncg-v${{ env.PINENTRY_VERSION }}.zip
           cd ../..
           $ARTIFACT_HASH = (Get-FileHash -Algorithm SHA256 pinentry-w32-ncg-v${{ env.PINENTRY_VERSION }}.zip).Hash
           "$ARTIFACT_HASH  pinentry-w32-ncg-v${{ env.PINENTRY_VERSION }}.zip"| Out-File -Encoding ascii -File sha256sum.txt
